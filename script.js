@@ -41,13 +41,6 @@ const methods = {
 
 //use methods to get a result
 function operate(a, op, b) {
-    if (isNaN(num1) || isNaN(num2)) {
-        Ldisplay.style.cssText = 'font-size: 18px';
-        Ldisplay.textContent = 'You did not imput a solvable operation, or the result was negative';
-        setTimeout(() => {
-            location.reload();
-        }, 2000);
-    }
     return methods['operators'][op](a, b);
 }
 
@@ -57,7 +50,7 @@ function displayResults() {
 
     const equals = document.querySelector('.big');
     equals.addEventListener('click', () => {
-        let content = Ldisplay.textContent.split(' ');
+        var content = Ldisplay.textContent.split(' ');
         num1 = +content[0];
         operator = content[1];
         num2 = +content[2];
@@ -79,15 +72,19 @@ function displayResults() {
         }
         Udisplay.textContent = content.join(' ');
 
-        if (operate(num1, operator, num2) === Infinity) {
+        if (content[0] === Infinity || operate(num1, operator, num2) === Infinity) {
             Ldisplay.textContent = 'Nice try (;';
+            setTimeout(() => {
+                location.reload();
+            }, 2000);  
+        }else if (isNaN(operate(num1, operator, num2))) {
+            Ldisplay.style.cssText = 'font-size: 18px';
+            Ldisplay.textContent = 'You did not imput a solvable operation';
             setTimeout(() => {
                 location.reload();
             }, 2000);
         }else if (operate(num1, operator, num2) === Math.floor(operate(num1, operator, num2))) {
             Ldisplay.textContent = operate(num1, operator, num2);
-        }else if (operate(num1, operator, num2) === Infinity) {
-            Ldisplay.textContent = 'Nice try (;';
         }else{
             Ldisplay.textContent = operate(num1, operator, num2).toFixed(2);
         }
